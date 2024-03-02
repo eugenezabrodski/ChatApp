@@ -31,7 +31,7 @@ class PeopleViewController: UIViewController {
         setupSearchBar()
         setupCollectionView()
         createDataSource()
-        reloadData()
+        reloadData(with: nil)
     }
     
     // MARK: - Methods
@@ -53,7 +53,7 @@ class PeopleViewController: UIViewController {
         collectionView.backgroundColor = .mainWhite()
         view.addSubview(collectionView)
         collectionView.register(SectionHeader.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: SectionHeader.reuseId)
-        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cellid")
+        collectionView.register(UserCell.self, forCellWithReuseIdentifier: UserCell.reuseId)
     }
     
     private func createCompositionLayout() -> UICollectionViewLayout {
@@ -71,10 +71,13 @@ class PeopleViewController: UIViewController {
         return layout
     }
     
-    private func reloadData() {
+    private func reloadData(with searchText: String?) {
+        let filtered = users.filter { (user) -> Bool in
+            user.contains(filter: searchText)
+        }
         var snapshot = NSDiffableDataSourceSnapshot<Section, MUser>()
         snapshot.appendSections([.user])
-        snapshot.appendItems(users, toSection: .user)
+        snapshot.appendItems(filtered, toSection: .user)
         dataSource?.apply(snapshot, animatingDifferences: true)
     }
     
@@ -109,9 +112,7 @@ extension PeopleViewController {
             guard let section = Section(rawValue: indexPath.section) else { fatalError() }
             switch section {
             case .user:
-                let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cellid", for: indexPath)
-                cell.backgroundColor = .blue
-                return cell
+                return self.configure(collectionView: collectionView, cellType: UserCell.self, with: user, for: indexPath)
             }
         })
         
@@ -130,7 +131,7 @@ extension PeopleViewController {
 
 extension PeopleViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
-        print(searchText)
+        reloadData(with: searchText)
     }
 }
 

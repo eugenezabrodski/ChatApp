@@ -113,9 +113,9 @@ class ListViewController: UIViewController {
             guard let section = Section(rawValue: indexPath.section) else { fatalError("H") }
             switch section {
             case .activeChats:
-                return self.configure(cellType: ActiveChatCell.self, with: chat, for: indexPath)
+                return self.configure(collectionView: collectionView, cellType: ActiveChatCell.self, with: chat, for: indexPath)
             case .waitingChats:
-                return self.configure(cellType: WaitingChatCell.self, with: chat, for: indexPath)
+                return self.configure(collectionView: collectionView, cellType: WaitingChatCell.self, with: chat, for: indexPath)
             }
         })
         dataSource?.supplementaryViewProvider = {
@@ -141,11 +141,6 @@ class ListViewController: UIViewController {
         dataSource?.apply(snapshot, animatingDifferences: true)
     }
     
-    private func configure<T: SelfConfiguringCell>(cellType: T.Type, with value: MChat, for indexPath: IndexPath) -> T {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellType.reuseId, for: indexPath) as? T else { fatalError() }
-        cell.configure(with: value)
-        return cell
-    }
 }
 
 

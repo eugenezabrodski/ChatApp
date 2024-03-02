@@ -16,10 +16,11 @@ class ActiveChatCell: UICollectionViewCell, SelfConfiguringCell {
     let lastMessage = UILabel(text: "Go to date!")
     let gradientView = GradientView(from: .topTrailing, to: .bottomLeading, start: .gray, end: .systemPink)
     
-    func configure(with value: MChat) {
-        friendImageView.image = UIImage(named: value.userImageString)
-        friendName.text = value.username
-        lastMessage.text = value.lastMessage
+    func configure<U>(with value: U) where U : Hashable {
+        guard let chat: MChat = value as? MChat else { return }
+        friendImageView.image = UIImage(named: chat.userImageString)
+        friendName.text = chat.username
+        lastMessage.text = chat.lastMessage
     }
     
     private func setupConstraint() {

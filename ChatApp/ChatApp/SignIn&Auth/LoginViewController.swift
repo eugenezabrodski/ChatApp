@@ -30,8 +30,21 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .white
         googleButton.customGoogleButton()
         setupUI()
+        loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc private func loginButtonTapped() {
+        AuthService.shared.login(email: emailTextField.text, password: passwordTextField.text) { result in
+            switch result {
+            case .success(let user):
+                self.showAlert(with: "Success", and: "Auth done!")
+            case .failure(let error):
+                self.showAlert(with: "Error", and: "Error-Error")
+            }
+        }
     }
     
 }
@@ -73,7 +86,7 @@ extension LoginViewController {
         ])
         
         NSLayoutConstraint.activate([
-            bottomStackView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 60),
+            bottomStackView.topAnchor.constraint(equalTo: stackView.bottomAnchor, constant: 30),
             bottomStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40),
             bottomStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -40)
         ])
@@ -83,6 +96,7 @@ extension LoginViewController {
 // MARK: - Canvas
 
 import SwiftUI
+import FirebaseAuth
 
 struct LoginViewControllerProvider: PreviewProvider {
     

@@ -20,17 +20,31 @@ class AuthViewController: UIViewController {
     let googleButton = UIButton(title: "Google", titleColor: .black, backgroundColor: .white, font: .avenir20(), isShadow: true, cornerRadius: 4)
     let emailButton = UIButton(title: "Email", titleColor: .white, backgroundColor: .mainBlack(), font: .avenir20(), isShadow: false, cornerRadius: 4)
     let loginButton = UIButton(title: "Login", titleColor: .buttonRed(), backgroundColor: .white, font: .avenir20(), isShadow: true, cornerRadius: 4)
+    
+    let signUPVC = SignUpViewController()
+    let loginVC = LoginViewController()
 
     // MARK: - Life cicle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         googleButton.customGoogleButton()
+        view.backgroundColor = .white
         logoImageView.tintColor = .red
         setupUI()
+        emailButton.addTarget(self, action: #selector(emailButtonTapped), for: .touchUpInside)
+        loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
     }
     
     // MARK: - Methods
+    
+    @objc private func emailButtonTapped() {
+        present(signUPVC, animated: true)
+    }
+    
+    @objc private func loginButtonTapped() {
+        present(loginVC, animated: true)
+    }
     
     private func setupUI() {
         let googleView = ButtonFormView(label: googleLabel, button: googleButton)

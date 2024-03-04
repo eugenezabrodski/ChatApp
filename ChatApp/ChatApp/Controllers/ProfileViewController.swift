@@ -13,13 +13,17 @@ class ProfileViewController: UIViewController {
     let imageView = UIImageView(image: UIImage(named: "human5"), contentMode: .scaleAspectFill)
     let nameLabel = UILabel(text: "Kira Ford")
     let aboutLabel = UILabel(text: "Go to the island with me, swetty!")
-    let myTextField = UITextField()
+    let myTextField = InsertableTextField()
     
     // MARK: - Life cicle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         setupConstraint()
+    }
+    
+    @objc func sentMessage() {
+        print(#function)
     }
 
 }
@@ -71,11 +75,15 @@ extension ProfileViewController {
         ])
         
         NSLayoutConstraint.activate([
-            myTextField.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 8),
+            myTextField.topAnchor.constraint(equalTo: aboutLabel.bottomAnchor, constant: 8),
             myTextField.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 24),
             myTextField.trailingAnchor.constraint(equalTo: containerView.trailingAnchor, constant: -24),
             myTextField.heightAnchor.constraint(equalToConstant: 48)
         ])
+        
+        if let button = myTextField.rightView as? UIButton {
+            button.addTarget(self, action: #selector(sentMessage), for: .touchUpInside)
+        }
     }
     
 }

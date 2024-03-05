@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class SetupProfileViewController: UIViewController {
     
@@ -22,8 +23,18 @@ class SetupProfileViewController: UIViewController {
     let sexSegmentedControl = UISegmentedControl(first: "Male", second: "Female")
     
     let goToChatsButton = UIButton(title: "Go to chats!", titleColor: .white, backgroundColor: .mainBlack(), cornerRadius: 4)
-    
     let fullImageView = AddPhotoView()
+    
+    private let currentUser: User
+    
+    init(currentUser: User) {
+        self.currentUser = currentUser
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     // MARK: - Life cicle
     
@@ -31,6 +42,24 @@ class SetupProfileViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         setupUI()
+        goToChatsButton.addTarget(self, action: #selector(goToChatsButtonTapped), for: .touchUpInside)
+    }
+    
+    @objc func goToChatsButtonTapped() {
+        FirestoreService.shared.saveProfileWith(id: currentUser.uid,
+                                                email: currentUser.email!,
+                                                userName: fullNameTextField.text,
+                                                avatarImageString: "nil",
+                                                description: aboutMeTextField.text,
+                                                sex: sexSegmentedControl.titleForSegment(at: sexSegmentedControl.selectedSegmentIndex)) { result in
+            switch result {
+            case .success(let muser):
+                self.showAlert(with: "Success", and: "Go to chat")
+                print(muser)
+            case .failure(_):
+                self.showAlert(with: "Error", and: "Not Go to chat")
+            }
+        }
     }
 }
 
@@ -85,7 +114,7 @@ struct SetupProfileViewControllerProvider: PreviewProvider {
     
     struct ContainerView: UIViewControllerRepresentable {
         
-        let viewController = SetupProfileViewController()
+        let viewController = SetupProfileViewController(currentUser: Auth.auth().currentUser!)
         
         func makeUIViewController(context: Context) -> some SetupProfileViewController {
             return viewController

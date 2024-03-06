@@ -31,9 +31,12 @@ class AuthViewController: UIViewController {
         googleButton.customGoogleButton()
         view.backgroundColor = .white
         logoImageView.tintColor = .red
+        
         setupUI()
+        
         emailButton.addTarget(self, action: #selector(emailButtonTapped), for: .touchUpInside)
         loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+        
         signUPVC.delegate = self
         loginVC.delegate = self
     }
